@@ -7,7 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import kotlin.random.Random
-
+const val Output = "function output"
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +16,9 @@ class MainActivity : AppCompatActivity() {
         // You can test your helper functions by  calling them from onCreate() and
         // printing their output to the Log, which is visible in the LogCat:
         // eg. Log.d("function output", getTestDataArray().toString())
+        Log.d(Output, getTestDataArray().toString())
+        val array = listOf<Double>(12.1, 10.5, 13.5,9.6,1.5)
+        Log.d(Output, averageLessThanMedian(array).toString())
 
     }
 
@@ -27,14 +30,19 @@ class MainActivity : AppCompatActivity() {
     // Look at the final/return value and build the function "working backwards"
 
     // Return a list of random, sorted integers
-    private fun getTestDataArray() : List<Int> {
+    /*private fun getTestDataArray() : List<Int> {
         val testArray = MutableList(10){ Random.nextInt()}
         testArray.sort()
         return testArray
+    }*/
+    private fun getTestDataArray() : Any = MutableList(10){Random.nextInt()}.apply {
+        this.sort()
     }
 
+
+
     // Return true if average value in list is greater than median value, false otherwise
-    private fun averageLessThanMedian(listOfNumbers: List<Double>): Boolean {
+    /*private fun averageLessThanMedian(listOfNumbers: List<Double>): Boolean {
         val avg = listOfNumbers.average()
         val sortedList = listOfNumbers.sorted()
         val median = if (sortedList.size % 2 == 0)
@@ -43,10 +51,15 @@ class MainActivity : AppCompatActivity() {
             sortedList[sortedList.size / 2]
 
         return avg < median
+    }*/
+    private fun averageLessThanMedian(listOfNumbers: List<Double>): Boolean = listOfNumbers.average() < listOfNumbers.let{
+        if(it.sorted().size % 2 == 0)
+            (it.sorted()[it.sorted().size/2] + it.sorted()[(it.sorted().size-1) / 2]) / 2
+        else
+            it.sorted()[it.sorted().size/2]
     }
-
     // Create a view from an item in a collection, but recycle if possible (similar to an AdapterView's adapter)
-    private fun getView(position: Int, recycledView: View?, collection: List<Int>, context: Context): View {
+    /*private fun getView(position: Int, recycledView: View?, collection: List<Int>, context: Context): View {
         val textView: TextView
 
         if (recycledView != null) {
@@ -60,6 +73,16 @@ class MainActivity : AppCompatActivity() {
         textView.text = collection[position].toString()
 
         return textView
+    }*/
+
+    private fun getView(position: Int, recycledView: View?, collection: List<Int>, context: Context):View =
+        (recycledView as? TextView ?: TextView(context).apply{
+            setPadding(5, 10, 10, 0)
+            textSize = 22f
+        }).apply {
+            text = collection[position].toString()
+
+
     }
 
 }
